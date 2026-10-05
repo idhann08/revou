@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Music Player</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Background gradient that reacts to current song -->
+  <div class="bg-gradient" id="bgGradient"></div>
+  <div class="bg-noise"></div>
+
+  <div class="app">
+
+    <!-- Sidebar: Playlist -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Library</h2>
+        <button class="icon-btn" title="Add song">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="16"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search in Library..." />
+      </div>
+
+      <ul class="playlist" id="playlist"></ul>
+    </aside>
+
+    <!-- Main Player Area -->
+    <main class="player-area">
+
+      <!-- Now Playing Card -->
+      <div class="now-playing-card">
+
+        <!-- Album Art -->
+        <div class="album-art-container">
+          <div class="album-art-shadow"></div>
+          <div class="album-art" id="albumArt">
+            <div class="vinyl-ring"></div>
+            <div class="album-cover" id="albumCover"></div>
+            <div class="vinyl-center"></div>
+          </div>
+        </div>
+
+        <!-- Song Info -->
+        <div class="song-info">
+          <div class="song-meta">
+            <div class="song-title-row">
+              <h1 class="song-title" id="songTitle">Select a Song</h1>
+              <button class="heart-btn" id="heartBtn" title="Add to favorites">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </button>
+            </div>
+            <p class="song-artist" id="songArtist">—</p>
+            <p class="song-album" id="songAlbum">—</p>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-section">
+          <div class="progress-bar-container" id="progressContainer">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressFill"></div>
+              <div class="progress-thumb" id="progressThumb"></div>
+            </div>
+          </div>
+          <div class="time-labels">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
+          </div>
+        </div>
+
+        <!-- Main Controls -->
+        <div class="controls">
+          <button class="ctrl-btn shuffle-btn" id="shuffleBtn" title="Shuffle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 3 21 3 21 8"/>
+              <line x1="4" y1="20" x2="21" y2="3"/>
+              <polyline points="21 16 21 21 16 21"/>
+              <line x1="15" y1="15" x2="21" y2="21"/>
+            </svg>
+          </button>
+
+          <button class="ctrl-btn prev-btn" id="prevBtn" title="Previous">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="19 20 9 12 19 4 19 20"/>
+              <line x1="5" y1="19" x2="5" y2="5" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+
+          <button class="play-pause-btn" id="playPauseBtn" title="Play/Pause">
+            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <svg class="pause-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16"/>
+              <rect x="14" y="4" width="4" height="16"/>
+            </svg>
+          </button>
+
+          <button class="ctrl-btn next-btn" id="nextBtn" title="Next">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 4 15 12 5 20 5 4"/>
+              <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+
+          <button class="ctrl-btn repeat-btn" id="repeatBtn" title="Repeat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="17 1 21 5 17 9"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <polyline points="7 23 3 19 7 15"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+            <span class="repeat-badge hidden" id="repeatBadge">1</span>
+          </button>
+        </div>
+
+        <!-- Volume & Extra Controls -->
+        <div class="extra-controls">
+          <div class="volume-section">
+            <button class="volume-icon-btn" id="muteBtn" title="Mute">
+              <svg class="vol-icon" id="volIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path id="volPath1" d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                <path id="volPath2" d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+            </button>
+            <div class="volume-slider-container">
+              <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80" />
+            </div>
+          </div>
+
+          <div class="right-controls">
+            <button class="icon-btn" id="lyricsBtn" title="Lyrics">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </button>
+            <button class="icon-btn" id="queueBtn" title="Up next">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"/>
+                <line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Lyrics Panel (hidden by default) -->
+      <div class="lyrics-panel hidden" id="lyricsPanel">
+        <div class="lyrics-header">
+          <h3>Lyrics</h3>
+          <button class="icon-btn" id="closeLyricsBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <div class="lyrics-content" id="lyricsContent"></div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Audio Element -->
+  <audio id="audioPlayer"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
